@@ -14,3 +14,18 @@
 Route::get('/', function () {
     return view('contenido/contenido');
 });
+//index Se encuentra CategoriaController
+Route::get('/categoria', 'CategoriaController@index');
+//store Se encuentra CategoriaController
+Route::post('/categoria/registrar', 'CategoriaController@store');
+//update Se encuentra CategoriaController
+Route::post('/categoria/actualizar', 'CategoriaController@update');
+//desactivar Se encuentra CategoriaController
+Route::post('/categoria/desactivar', 'CategoriaController@desactivar');
+//activar Se encuentra CategoriaController
+Route::post('/categoria/activar', 'CategoriaController@activar');
+
+
+
+
+
