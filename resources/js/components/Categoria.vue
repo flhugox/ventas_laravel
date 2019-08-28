@@ -117,13 +117,9 @@
                         </div>
                        
                         <div class="modal-body">
-                            
-                            <div class="form-group row div-error">
-                                
+                            <div v-show="errorCategoria" class="form-group row div-error">
                                 <div class="text-center text-error">
-                                    
-                                    <div></div>
-
+                                    <div v-for="error in errorMostrarMsjCategoria" :key="error" v-text="error"></div>
                                 </div>
                             
                             </div>
@@ -168,20 +164,27 @@
    
     export default {
         data(){
+
             return {
+
                 nombre:'',
                 descripcion:'',
                 arrayCategoria:[],
                 modal:0,
                 tituloModal:'',
-                tipoAccion:0
+                tipoAccion:0,
+                errorCategoria:0,
+                errorMostrarMsjCategoria:[]
             }
+
         },
+
         methods:{
 
            listarCategoria(){
 
                let me=this;
+
                axios.get('/categoria').then(function (response) {
                     // handle success
                     //console.log(response);
@@ -192,10 +195,12 @@
                     console.log(error);
                 });
            },
-
            registrarCategoria(){
+               if(this.validarCategoria()){
+                   return;
+               }
                let me=this;
-               axios.post('/categoria/registrar',{                 
+               axios.post('/categoria/registrar',{
                  'nombre':this.nombre,
                  'descripcion':this.descripcion
                }).then(function (response) {
@@ -203,13 +208,28 @@
                     //console.log(response);
                     me.cerrarModal();
                     me.listarCategoria();
+
                 }).catch(function (error) {
                     // handle error
                     console.log(error);
                 });
+
            },
 
+            validarCategoria(){
+
+                 this.errorCategoria=0;
+                 this.errorMostrarMsjCategoria=[];
+
+                 if(!this.nombre)  this.errorMostrarMsjCategoria.push("(*)El nombre de la categoria no puede estar vacio");
+
+                 if(this.errorMostrarMsjCategoria.length) this.errorCategoria=1;
+             
+                 return this.errorCategoria;
+            },
+
            cerrarModal(){
+
                this.modal=0;
                this.tituloModal="";
                this.nombre="";
@@ -217,13 +237,20 @@
 
            },
 
-           abrirModal(modelo,accion,data=[]){                 
+           abrirModal(modelo,accion,data=[]){
+                 
                  switch(modelo){
-                    case "categoria":                  
+
+                    case "categoria":
+                    
                     {
+
                         switch(accion){
+
                             case "registrar":
+
                                 {
+                                   
                                    this.modal=1;
                                    this.tituloModal="Registrar Categoria";
                                    this.nombre="";
@@ -231,14 +258,26 @@
                                    this.tipoAccion=1;
                                 
                                 }
+
                                 case "actualizar":
+
                                 {
-                                }                        
+
+                                
+                                }
+                        
                         }
+
+
                     }
-                }                        
-           }        
-        },        
+
+                }
+
+                        
+           }
+        
+        },
+        
         mounted() {
             //console.log('Component mounted.')
             this.listarCategoria();
@@ -249,9 +288,10 @@
 <style>
            
      .modal-content{
+
       width:100% !important;
       position:absolute !important;
-    }
+  }
 
   .mostrar{
 
@@ -259,6 +299,19 @@
       opacity:1 !important;
       position:absolute !important;
       background-color:#3c29297a !important;
+  }
+
+   .div-error{
+
+      display:flex;
+      justify-content:center;
+  }
+
+  .text-error{
+      
+      color:red !important;
+      font-weight:bold;
+      font-size:20px;
   }
 
 </style>
