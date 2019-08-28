@@ -1989,89 +1989,45 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      categoria_id: 0,
       nombre: '',
       descripcion: '',
       arrayCategoria: [],
       modal: 0,
       tituloModal: '',
-      tipoAccion: 0,
-      errorCategoria: 0,
-      errorMostrarMsjCategoria: [],
-      pagination: {
-        'total': 0,
-        'current_page': 0,
-        'per_page': 0,
-        'last_page': 0,
-        'from': 0,
-        'to': 0
-      },
-      offset: 3,
-      criterio: 'nombre',
-      buscar: ''
+      tipoAccion: 0
     };
   },
-  computed: {
-    isActived: function isActived() {
-      return this.pagination.current_page;
-    },
-    //calcula los elementos de la paginacion
-    pagesNumber: function pagesNumber() {
-      if (!this.pagination.to) {
-        return [];
-      }
-
-      var from = this.pagination.current_page - this.offset;
-
-      if (from < 1) {
-        from = 1;
-      }
-
-      var to = from + this.offset * 2;
-
-      if (to >= this.pagination.last_page) {
-        to = this.pagination.last_page;
-      }
-
-      var pagesArray = [];
-
-      while (from <= to) {
-        pagesArray.push(from);
-        from++;
-      }
-
-      return pagesArray;
-    }
-  },
   methods: {
-    //Retornar listados
-    listarCategoria: function listarCategoria(page, buscar, criterio) {
+    listarCategoria: function listarCategoria() {
       var me = this;
-      var url = '/categoria?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
-      axios.get(url).then(function (response) {
+      axios.get('/categoria').then(function (response) {
         // handle success
-        console.log(response); //  respuesta = response.data;
-
-        me.arrayCategoria = response.data; // me.pagination= respuesta.pagination;
+        //console.log(response);
+        me.arrayCategoria = response.data;
       })["catch"](function (error) {
         // handle error
         console.log(error);
       });
     },
-    cambiarPagina: function cambiarPagina(page, buscar, criterio) {
-      var me = this; //Actualiza  la pagina actual
-
-      me.pagination.current_page = page;
-      me.listarCategoria(page, buscar, criterio);
-    },
     registrarCategoria: function registrarCategoria() {
-      if (this.validarCategoria()) {
-        return;
-      }
-
       var me = this;
       axios.post('/categoria/registrar', {
         'nombre': this.nombre,
@@ -2080,104 +2036,11 @@ __webpack_require__.r(__webpack_exports__);
         // handle success
         //console.log(response);
         me.cerrarModal();
-        me.listarCategoria(1, '', 'nombre');
+        me.listarCategoria();
       })["catch"](function (error) {
         // handle error
         console.log(error);
       });
-    },
-    actualizarCategoria: function actualizarCategoria() {
-      if (this.validarCategoria()) {
-        return;
-      }
-
-      var me = this;
-      axios.put('/categoria/actualizar', {
-        'nombre': this.nombre,
-        'descripcion': this.descripcion,
-        'id': this.categoria_id
-      }).then(function (response) {
-        // handle success
-        //console.log(response);
-        me.cerrarModal();
-        me.listarCategoria(1, '', 'nombre');
-      })["catch"](function (error) {
-        // handle error
-        console.log(error);
-      });
-    },
-    desactivarCategoria: function desactivarCategoria(id) {
-      var _this = this;
-
-      var swalWithBootstrapButtons = Swal.mixin({
-        confirmButtonClass: 'btn btn-success',
-        cancelButtonClass: 'btn btn-danger',
-        buttonsStyling: false
-      });
-      swalWithBootstrapButtons({
-        title: 'Estas seguro de desactivar la categoria?',
-        //type: 'warning',
-        showCancelButton: true,
-        confirmButtonText: '<i class="fa fa-check fa-2x"></i> Aceptar',
-        cancelButtonText: '<i class="fa fa-times fa-2x"></i> Cancelar',
-        reverseButtons: true
-      }).then(function (result) {
-        if (result.value) {
-          var me = _this;
-          axios.put('/categoria/desactivar', {
-            'id': id
-          }).then(function (response) {
-            // handle success
-            //console.log(response);
-            me.listarCategoria(1, '', 'nombre');
-            swalWithBootstrapButtons('Desactivado!', 'El registro ha sido desactivado con exito.', 'success');
-          })["catch"](function (error) {
-            // handle error
-            console.log(error);
-          });
-        } else if ( // Read more about handling dismissals
-        result.dismiss === Swal.DismissReason.cancel) {}
-      });
-    },
-    activarCategoria: function activarCategoria(id) {
-      var _this2 = this;
-
-      var swalWithBootstrapButtons = Swal.mixin({
-        confirmButtonClass: 'btn btn-success',
-        cancelButtonClass: 'btn btn-danger',
-        buttonsStyling: false
-      });
-      swalWithBootstrapButtons({
-        title: 'Estas seguro de activar la categoria?',
-        //type: 'warning',
-        showCancelButton: true,
-        confirmButtonText: '<i class="fa fa-check fa-2x"></i> Aceptar',
-        cancelButtonText: '<i class="fa fa-times fa-2x"></i> Cancelar',
-        reverseButtons: true
-      }).then(function (result) {
-        if (result.value) {
-          var me = _this2;
-          axios.put('/categoria/activar', {
-            'id': id
-          }).then(function (response) {
-            // handle success
-            //console.log(response);
-            me.listarCategoria(1, '', 'nombre');
-            swalWithBootstrapButtons('Activado!', 'El registro ha sido activado con exito.', 'success');
-          })["catch"](function (error) {
-            // handle error
-            console.log(error);
-          });
-        } else if ( // Read more about handling dismissals
-        result.dismiss === Swal.DismissReason.cancel) {}
-      });
-    },
-    validarCategoria: function validarCategoria() {
-      this.errorCategoria = 0;
-      this.errorMostrarMsjCategoria = [];
-      if (!this.nombre) this.errorMostrarMsjCategoria.push("(*)El nombre de la categoria no puede estar vacio");
-      if (this.errorMostrarMsjCategoria.length) this.errorCategoria = 1;
-      return this.errorCategoria;
     },
     cerrarModal: function cerrarModal() {
       this.modal = 0;
@@ -2199,20 +2062,10 @@ __webpack_require__.r(__webpack_exports__);
                   this.nombre = "";
                   this.descripcion = "";
                   this.tipoAccion = 1;
-                  break;
                 }
 
               case "actualizar":
-                {
-                  //console.log(data);
-                  this.modal = 1;
-                  this.tituloModal = "Editar Categoria";
-                  this.tipoAccion = 2;
-                  this.categoria_id = data["id"];
-                  this.nombre = data["nombre"];
-                  this.descripcion = data["descripcion"];
-                  break;
-                }
+                {}
             }
           }
       }
@@ -2220,7 +2073,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     //console.log('Component mounted.')
-    this.listarCategoria(1, this.buscar, this.criterio);
+    this.listarCategoria();
   }
 });
 
@@ -6859,7 +6712,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.modal-content{\n\n    width:100% !important;\n    position:absolute !important;\n}\n.mostrar{\n\n    display:list-item !important;\n    opacity:1 !important;\n    position:absolute !important;\n    background-color:#3c29297a !important;\n}\n.div-error{\n\n    display:flex;\n    justify-content:center;\n}\n.text-error{\n    \n    color:red !important;\n    font-weight:bold;\n    font-size:20px;\n}\n\n", ""]);
+exports.push([module.i, "\n.modal-content{\n    width:100% !important;\n    position:absolute !important;\n}\n.mostrar{\n\n    display:list-item !important;\n    opacity:1 !important;\n    position:absolute !important;\n    background-color:#3c29297a !important;\n}\n\n", ""]);
 
 // exports
 
@@ -38369,101 +38222,13 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "card-body" }, [
-          _c("div", { staticClass: "form-group row" }, [
-            _c("div", { staticClass: "col-md-6" }, [
-              _c("div", { staticClass: "input-group" }, [
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.criterio,
-                        expression: "criterio"
-                      }
-                    ],
-                    staticClass: "form-control col-md-3",
-                    on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.criterio = $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      }
-                    }
-                  },
-                  [
-                    _c("option", { attrs: { value: "nombre" } }, [
-                      _vm._v("Categoría")
-                    ]),
-                    _vm._v(" "),
-                    _c("option", { attrs: { value: "descripcion" } }, [
-                      _vm._v("Descripción")
-                    ])
-                  ]
-                ),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.buscar,
-                      expression: "buscar"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: { type: "text", placeholder: "Buscar texto" },
-                  domProps: { value: _vm.buscar },
-                  on: {
-                    keyup: function($event) {
-                      if (
-                        !$event.type.indexOf("key") &&
-                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                      ) {
-                        return null
-                      }
-                      return _vm.listarCategoria(1, _vm.buscar, _vm.criterio)
-                    },
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.buscar = $event.target.value
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-primary",
-                    attrs: { type: "submit" },
-                    on: {
-                      click: function($event) {
-                        return _vm.listarCategoria(1, _vm.buscar, _vm.criterio)
-                      }
-                    }
-                  },
-                  [_c("i", { staticClass: "fa fa-search" }), _vm._v(" Buscar")]
-                )
-              ])
-            ])
-          ]),
+          _vm._m(1),
           _vm._v(" "),
           _c(
             "table",
             { staticClass: "table table-bordered table-striped table-sm" },
             [
-              _vm._m(1),
+              _vm._m(2),
               _vm._v(" "),
               _c(
                 "tbody",
@@ -38492,9 +38257,19 @@ var render = function() {
                               )
                             ]
                           )
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _vm._m(2, true)
+                        : _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-danger btn-md",
+                              attrs: { type: "button" }
+                            },
+                            [
+                              _c("i", { staticClass: "fa fa-check fa-2x" }),
+                              _vm._v(
+                                " Desactivado\n                                     "
+                              )
+                            ]
+                          )
                     ]),
                     _vm._v(" "),
                     _c("td", [
@@ -38507,7 +38282,7 @@ var render = function() {
                             click: function($event) {
                               return _vm.abrirModal(
                                 "categoria",
-                                "actualizar",
+                                "registrar",
                                 categoria
                               )
                             }
@@ -38523,59 +38298,15 @@ var render = function() {
                       _vm._v("  \n                                 ")
                     ]),
                     _vm._v(" "),
-                    _c(
-                      "td",
-                      [
-                        [
-                          _c(
-                            "button",
-                            {
-                              staticClass: "btn btn-danger btn-sm",
-                              attrs: { type: "button" },
-                              on: {
-                                click: function($event) {
-                                  return _vm.desactivarCategoria(categoria.id)
-                                }
-                              }
-                            },
-                            [
-                              _c("i", { staticClass: "fa fa-lock fa-2x" }),
-                              _vm._v(
-                                " Desactivar\n                                         "
-                              )
-                            ]
-                          )
-                        ],
-                        _vm._v(" "),
-                        [
-                          _c(
-                            "button",
-                            {
-                              staticClass: "btn btn-success btn-sm",
-                              attrs: { type: "button" },
-                              on: {
-                                click: function($event) {
-                                  return _vm.activarCategoria(categoria.id)
-                                }
-                              }
-                            },
-                            [
-                              _c("i", { staticClass: "fa fa-lock fa-2x" }),
-                              _vm._v(
-                                " Activar\n                                         "
-                              )
-                            ]
-                          )
-                        ]
-                      ],
-                      2
-                    )
+                    _vm._m(3, true)
                   ])
                 }),
                 0
               )
             ]
-          )
+          ),
+          _vm._v(" "),
+          _vm._m(4)
         ])
       ])
     ]),
@@ -38628,33 +38359,7 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
-                _c(
-                  "div",
-                  {
-                    directives: [
-                      {
-                        name: "show",
-                        rawName: "v-show",
-                        value: _vm.errorCategoria,
-                        expression: "errorCategoria"
-                      }
-                    ],
-                    staticClass: "form-group row div-error"
-                  },
-                  [
-                    _c(
-                      "div",
-                      { staticClass: "text-center text-error" },
-                      _vm._l(_vm.errorMostrarMsjCategoria, function(error) {
-                        return _c("div", {
-                          key: error,
-                          domProps: { textContent: _vm._s(error) }
-                        })
-                      }),
-                      0
-                    )
-                  ]
-                ),
+                _vm._m(5),
                 _vm._v(" "),
                 _c(
                   "form",
@@ -38788,12 +38493,7 @@ var render = function() {
                       "button",
                       {
                         staticClass: "btn btn-success",
-                        attrs: { type: "button" },
-                        on: {
-                          click: function($event) {
-                            return _vm.actualizarCategoria()
-                          }
-                        }
+                        attrs: { type: "button" }
                       },
                       [
                         _c("i", { staticClass: "fa fa-save fa-2x" }),
@@ -38826,6 +38526,35 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group row" }, [
+      _c("div", { staticClass: "col-md-6" }, [
+        _c("div", { staticClass: "input-group" }, [
+          _c("select", { staticClass: "form-control col-md-3" }, [
+            _c("option", { attrs: { value: "nombre" } }, [_vm._v("Categoría")]),
+            _vm._v(" "),
+            _c("option", { attrs: { value: "descripcion" } }, [
+              _vm._v("Descripción")
+            ])
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "form-control",
+            attrs: { type: "text", placeholder: "Buscar texto" }
+          }),
+          _vm._v(" "),
+          _c(
+            "button",
+            { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+            [_c("i", { staticClass: "fa fa-search" }), _vm._v(" Buscar")]
+          )
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", { staticClass: "bg-primary" }, [
         _c("th", [_vm._v("Categoría")]),
@@ -38844,14 +38573,68 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      { staticClass: "btn btn-danger btn-md", attrs: { type: "button" } },
-      [
-        _c("i", { staticClass: "fa fa-check fa-2x" }),
-        _vm._v(" Desactivado\n                                     ")
-      ]
-    )
+    return _c("td", [
+      _c(
+        "button",
+        { staticClass: "btn btn-danger btn-sm", attrs: { type: "button" } },
+        [
+          _c("i", { staticClass: "fa fa-lock fa-2x" }),
+          _vm._v(" Desactivar\n                                     ")
+        ]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("nav", [
+      _c("ul", { staticClass: "pagination" }, [
+        _c("li", { staticClass: "page-item" }, [
+          _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+            _vm._v("Anterior")
+          ])
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "page-item active" }, [
+          _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+            _vm._v("1")
+          ])
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "page-item" }, [
+          _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+            _vm._v("2")
+          ])
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "page-item" }, [
+          _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+            _vm._v("3")
+          ])
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "page-item" }, [
+          _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+            _vm._v("4")
+          ])
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "page-item" }, [
+          _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+            _vm._v("Siguiente")
+          ])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group row div-error" }, [
+      _c("div", { staticClass: "text-center text-error" }, [_c("div")])
+    ])
   }
 ]
 render._withStripped = true
