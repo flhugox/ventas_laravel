@@ -2003,6 +2003,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      categoria_id: 0,
       nombre: '',
       descripcion: '',
       arrayCategoria: [],
@@ -2044,6 +2045,26 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
+    actualizarCategoria: function actualizarCategoria() {
+      if (this.validarCategoria()) {
+        return;
+      }
+
+      var me = this;
+      axios.put('/categoria/actualizar', {
+        'nombre': this.nombre,
+        'descripcion': this.descripcion,
+        'id': this.categoria_id
+      }).then(function (response) {
+        // handle success
+        //console.log(response);
+        me.cerrarModal();
+        me.listarCategoria();
+      })["catch"](function (error) {
+        // handle error
+        console.log(error);
+      });
+    },
     validarCategoria: function validarCategoria() {
       this.errorCategoria = 0;
       this.errorMostrarMsjCategoria = [];
@@ -2074,7 +2095,15 @@ __webpack_require__.r(__webpack_exports__);
                 }
 
               case "actualizar":
-                {}
+                {
+                  //console.log(data);
+                  this.modal = 1;
+                  this.tituloModal = "Editar Categoria";
+                  this.tipoAccion = 2;
+                  this.categoria_id = data["id"];
+                  this.nombre = data["nombre"];
+                  this.descripcion = data["descripcion"];
+                }
             }
           }
       }
@@ -38528,7 +38557,12 @@ var render = function() {
                       "button",
                       {
                         staticClass: "btn btn-success",
-                        attrs: { type: "button" }
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            return _vm.actualizarCategoria()
+                          }
+                        }
                       },
                       [
                         _c("i", { staticClass: "fa fa-save fa-2x" }),

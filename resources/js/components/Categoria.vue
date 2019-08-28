@@ -146,7 +146,7 @@
                         <div class="modal-footer">
                             <button type="button" @click="cerrarModal()" class="btn btn-danger"><i class="fa fa-times fa-2x"></i> Cerrar</button>
                             <button type="button" @click="registrarCategoria()" v-if="tipoAccion==1" class="btn btn-success"><i class="fa fa-save fa-2x"></i> Guardar</button>
-                            <button type="button" v-if="tipoAccion==2" class="btn btn-success"><i class="fa fa-save fa-2x"></i> Actualizar</button>
+                            <button type="button" @click="actualizarCategoria()"  v-if="tipoAccion==2" class="btn btn-success"><i class="fa fa-save fa-2x"></i> Actualizar</button>
                            
                         </div>
                     </div>
@@ -166,7 +166,7 @@
         data(){
 
             return {
-
+                categoria_id:0,
                 nombre:'',
                 descripcion:'',
                 arrayCategoria:[],
@@ -215,7 +215,34 @@
                 });
 
            },
+            actualizarCategoria(){
 
+                if(this.validarCategoria()){
+
+                   return;
+               }
+
+               let me=this;
+
+               axios.put('/categoria/actualizar',{
+                 
+                 'nombre':this.nombre,
+                 'descripcion':this.descripcion,
+                 'id':this.categoria_id,
+
+
+               }).then(function (response) {
+                    // handle success
+                    //console.log(response);
+                    me.cerrarModal();
+                    me.listarCategoria();
+
+                }).catch(function (error) {
+                    // handle error
+                    console.log(error);
+                });
+
+            },
             validarCategoria(){
 
                  this.errorCategoria=0;
@@ -262,7 +289,13 @@
                                 case "actualizar":
 
                                 {
-
+                                         //console.log(data);
+                                    this.modal=1;
+                                    this.tituloModal="Editar Categoria";
+                                    this.tipoAccion=2;
+                                    this.categoria_id=data["id"];
+                                    this.nombre=data["nombre"];
+                                    this.descripcion=data["descripcion"];
                                 
                                 }
                         

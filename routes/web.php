@@ -19,11 +19,11 @@ Route::get('/categoria', 'CategoriaController@index');
 //store Se encuentra CategoriaController
 Route::post('/categoria/registrar', 'CategoriaController@store');
 //update Se encuentra CategoriaController
-Route::post('/categoria/actualizar', 'CategoriaController@update');
+Route::put('/categoria/actualizar', 'CategoriaController@update');
 //desactivar Se encuentra CategoriaController
-Route::post('/categoria/desactivar', 'CategoriaController@desactivar');
+Route::put('/categoria/desactivar', 'CategoriaController@desactivar');
 //activar Se encuentra CategoriaController
-Route::post('/categoria/activar', 'CategoriaController@activar');
+Route::put('/categoria/activar', 'CategoriaController@activar');
 
 
 
