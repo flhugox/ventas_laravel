@@ -69,10 +69,17 @@
                                     <td>
 
                                         
-                                        <button type="button" class="btn btn-danger btn-sm">
-                                            <i class="fa fa-lock fa-2x"></i> Desactivar
-                                        </button>
-                                       
+                                        <template v-if="categoria.condicion">
+                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarCategoria(categoria.id)">
+                                                <i class="fa fa-lock fa-2x"></i> Desactivar
+                                            </button>
+                                        </template>
+
+                                        <template v-else>
+                                            <button type="button" class="btn btn-success btn-sm" @click="activarCategoria(categoria.id)">
+                                                <i class="fa fa-lock fa-2x"></i> Activar
+                                            </button>
+                                        </template>
                                     </td>
                                 </tr>
                                
@@ -241,6 +248,111 @@
                     // handle error
                     console.log(error);
                 });
+
+            },
+             desactivarCategoria(id){
+                            
+                const swalWithBootstrapButtons = Swal.mixin({
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                })
+
+                swalWithBootstrapButtons({
+                title: 'Estas seguro de desactivar la categoria?',
+                //type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '<i class="fa fa-check fa-2x"></i> Aceptar',
+                cancelButtonText: '<i class="fa fa-times fa-2x"></i> Cancelar',
+                reverseButtons: true
+                }).then((result) => {
+                if (result.value) {
+
+                  let me=this;
+
+               axios.put('/categoria/desactivar',{
+                 
+                 'id':id
+
+
+               }).then(function (response) {
+                    // handle success
+                    //console.log(response);
+                    me.listarCategoria();
+
+                     swalWithBootstrapButtons(
+                    'Desactivado!',
+                    'El registro ha sido desactivado con exito.',
+                    'success'
+                )
+
+                }).catch(function (error) {
+                    // handle error
+                    console.log(error);
+                });
+
+
+               
+                } else if (
+                // Read more about handling dismissals
+                result.dismiss === Swal.DismissReason.cancel
+                ) {
+               
+                }
+              })
+
+            },
+
+             activarCategoria(id){
+                            
+                const swalWithBootstrapButtons = Swal.mixin({
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                })
+
+                swalWithBootstrapButtons({
+                title: 'Estas seguro de activar la categoria?',
+                //type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '<i class="fa fa-check fa-2x"></i> Aceptar',
+                cancelButtonText: '<i class="fa fa-times fa-2x"></i> Cancelar',
+                reverseButtons: true
+                }).then((result) => {
+                if (result.value) {
+
+                  let me=this;
+
+               axios.put('/categoria/activar',{
+                 
+                 'id':id
+
+
+               }).then(function (response) {
+                    // handle success
+                    //console.log(response);
+                    me.listarCategoria();
+
+                     swalWithBootstrapButtons(
+                    'Activado!',
+                    'El registro ha sido activado con exito.',
+                    'success'
+                )
+
+                }).catch(function (error) {
+                    // handle error
+                    console.log(error);
+                });
+
+
+               
+                } else if (
+                // Read more about handling dismissals
+                result.dismiss === Swal.DismissReason.cancel
+                ) {
+               
+                }
+              })
 
             },
             validarCategoria(){

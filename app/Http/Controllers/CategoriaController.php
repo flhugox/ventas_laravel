@@ -14,22 +14,16 @@ class CategoriaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        return   $categorias=Categoria::all();
-        
+        if(!$request->ajax()) return redirect('/');
+        $categorias= Categoria::all();
+        return $categorias;
+       
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+    
 
     /**
      * Store a newly created resource in storage.
@@ -40,6 +34,7 @@ class CategoriaController extends Controller
     public function store(Request $request)
     {
         //
+        if(!$request->ajax()) return redirect('/');
         $categoria= new Categoria();
         $categoria->nombre= $request->nombre;
         $categoria->descripcion= $request->descripcion;
@@ -47,27 +42,6 @@ class CategoriaController extends Controller
         $categoria->save();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -79,39 +53,29 @@ class CategoriaController extends Controller
     public function update(Request $request)
     {
         //
+        if(!$request->ajax()) return redirect('/');
         $categoria= Categoria::findOrFail($request->id);
         $categoria->nombre= $request->nombre;
         $categoria->descripcion= $request->descripcion;
         $categoria->condicion= '1';
         $categoria->save();
     }
+
     public function desactivar(Request $request)
     {
         //
+        if(!$request->ajax()) return redirect('/');
         $categoria= Categoria::findOrFail($request->id);
         $categoria->condicion= '0';
         $categoria->save();
-        
     }
 
     public function activar(Request $request)
     {
         //
-      
+        if(!$request->ajax()) return redirect('/');
         $categoria= Categoria::findOrFail($request->id);
         $categoria->condicion= '1';
         $categoria->save();
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-        
     }
 }
