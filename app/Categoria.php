@@ -10,4 +10,10 @@ class Categoria extends Model
     protected $table = 'categorias';
 
     protected $fillable = ['nombre','descripcion','condicion'];
+
+    //Relacion de Uno  a Muchos
+
+    public function productos(){
+        return $this->hasMany("App\Producto");
+    }
 }
