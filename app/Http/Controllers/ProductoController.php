@@ -42,6 +42,8 @@ class ProductoController extends Controller
        
     }
 
+ 
+
     public function store(Request $request)
     {
         //

@@ -2736,40 +2736,46 @@ __webpack_require__.r(__webpack_exports__);
       me.pagination.current_page = page;
       me.listarProducto(page, buscar, criterio);
     },
-    registrarCategoria: function registrarCategoria() {
-      if (this.validarCategoria()) {
+    registrarProducto: function registrarProducto() {
+      if (this.validarProducto()) {
         return;
       }
 
       var me = this;
-      axios.post('/categoria/registrar', {
-        'nombre': this.nombre,
-        'descripcion': this.descripcion
+      axios.post('/producto/registrar', {
+        "idcategoria": this.idcategoria,
+        "codigo": this.codigo,
+        "nombre": this.nombre,
+        "stock": this.stock,
+        "precio_venta": this.precio_venta
       }).then(function (response) {
         // handle success
         //console.log(response);
         me.cerrarModal();
-        me.listarCategoria(1, '', 'nombre');
+        me.listarProducto(1, '', 'nombre');
       })["catch"](function (error) {
         // handle error
         console.log(error);
       });
     },
-    actualizarCategoria: function actualizarCategoria() {
-      if (this.validarCategoria()) {
+    actualizarProducto: function actualizarProducto() {
+      if (this.validarProducto()) {
         return;
       }
 
       var me = this;
-      axios.put('/categoria/actualizar', {
-        'nombre': this.nombre,
-        'descripcion': this.descripcion,
-        'id': this.categoria_id
+      axios.put('/producto/actualizar', {
+        "idcategoria": this.idcategoria,
+        "codigo": this.codigo,
+        "nombre": this.nombre,
+        "stock": this.stock,
+        "precio_venta": this.precio_venta,
+        "id": this.producto_id
       }).then(function (response) {
         // handle success
         //console.log(response);
         me.cerrarModal();
-        me.listarCategoria(1, '', 'nombre');
+        me.listarProducto(1, '', 'nombre');
       })["catch"](function (error) {
         // handle error
         console.log(error);
@@ -2841,17 +2847,26 @@ __webpack_require__.r(__webpack_exports__);
         result.dismiss === Swal.DismissReason.cancel) {}
       });
     },
-    validarCategoria: function validarCategoria() {
-      this.errorCategoria = 0;
-      this.errorMostrarMsjCategoria = [];
-      if (!this.nombre) this.errorMostrarMsjCategoria.push("(*)El nombre de la categoria no puede estar vacio");
-      if (this.errorMostrarMsjCategoria.length) this.errorCategoria = 1;
-      return this.errorCategoria;
+    validarProducto: function validarProducto() {
+      this.errorProducto = 0;
+      this.errorMostrarMsjProducto = [];
+      if (this.idcategoria == 0) this.errorMostrarMsjProducto.push("(*)Selecciona una categoria");
+      if (!this.nombre) this.errorMostrarMsjProducto.push("(*)El nombre del producto no puede estar vacio");
+      if (!this.precio_venta) this.errorMostrarMsjProducto.push("(*)El precio venta del producto debe ser un numero y no puede estar vacio");
+      if (!this.stock) this.errorMostrarMsjProducto.push("(*)El stock del producto debe ser un numero y no puede estar vacio");
+      if (this.errorMostrarMsjProducto.length) this.errorProducto = 1;
+      return this.errorProducto;
     },
     cerrarModal: function cerrarModal() {
       this.modal = 0;
       this.tituloModal = "";
+      this.idcategoria = 0;
+      this.nombre_categoria = "";
+      this.codigo = "";
       this.nombre = "";
+      this.precio_venta = 0;
+      this.stock = 0;
+      this.errorProducto = 0;
     },
     abrirModal: function abrirModal(modelo, accion) {
       var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
@@ -2863,9 +2878,13 @@ __webpack_require__.r(__webpack_exports__);
               case "registrar":
                 {
                   this.modal = 1;
-                  this.tituloModal = "Registrar Producto";
+                  this.tituloModal = 'Agregar Producto';
+                  this.idcategoria = 0;
+                  this.nombre_categoria = "";
+                  this.codigo = "";
                   this.nombre = "";
-                  this.descripcion = "";
+                  this.precio_venta = 0;
+                  this.stock = 0;
                   this.tipoAccion = 1;
                   break;
                 }
@@ -2876,9 +2895,12 @@ __webpack_require__.r(__webpack_exports__);
                   this.modal = 1;
                   this.tituloModal = "Editar Producto";
                   this.tipoAccion = 2;
-                  this.categoria_id = data["id"];
+                  this.producto_id = data["id"];
+                  this.idcategoria = data["idcategoria"];
+                  this.codigo = data["codigo"];
                   this.nombre = data["nombre"];
-                  this.descripcion = data["descripcion"];
+                  this.precio_venta = data["precio_venta"];
+                  this.stock = data["stock"];
                   break;
                 }
             }
@@ -40538,7 +40560,7 @@ var render = function() {
                         attrs: { type: "button" },
                         on: {
                           click: function($event) {
-                            return _vm.registrarCategoria()
+                            return _vm.registrarProducto()
                           }
                         }
                       },
@@ -40557,7 +40579,7 @@ var render = function() {
                         attrs: { type: "button" },
                         on: {
                           click: function($event) {
-                            return _vm.actualizarCategoria()
+                            return _vm.actualizarProducto()
                           }
                         }
                       },

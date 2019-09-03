@@ -25,6 +25,8 @@ Route::put('/categoria/desactivar', 'CategoriaController@desactivar');
 //activar Se encuentra CategoriaController
 Route::put('/categoria/activar', 'CategoriaController@activar');
 
+Route::get('/categoria/selectCategoria', 'CategoriaController@selectCategoria');
+
 
 
 Route::get('/producto', 'ProductoController@index');

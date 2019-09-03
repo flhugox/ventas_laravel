@@ -196,8 +196,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" @click="cerrarModal()" class="btn btn-danger"><i class="fa fa-times fa-2x"></i> Cerrar</button>
-                            <button type="button" @click="registrarCategoria()" v-if="tipoAccion==1" class="btn btn-success"><i class="fa fa-save fa-2x"></i> Guardar</button>
-                            <button type="button" @click="actualizarCategoria()" v-if="tipoAccion==2" class="btn btn-success"><i class="fa fa-save fa-2x"></i> Actualizar</button>
+                            <button type="button" @click="registrarProducto()" v-if="tipoAccion==1" class="btn btn-success"><i class="fa fa-save fa-2x"></i> Guardar</button>
+                            <button type="button" @click="actualizarProducto()" v-if="tipoAccion==2" class="btn btn-success"><i class="fa fa-save fa-2x"></i> Actualizar</button>
                            
                         </div>
                     </div>
@@ -343,26 +343,29 @@
 
            },
 
-           registrarCategoria(){
+           registrarProducto(){
 
-               if(this.validarCategoria()){
+               if(this.validarProducto()){
 
                    return;
                }
 
                let me=this;
 
-               axios.post('/categoria/registrar',{
+               axios.post('/producto/registrar',{
                  
-                 'nombre':this.nombre,
-                 'descripcion':this.descripcion
+                    "idcategoria":this.idcategoria,
+                     "codigo":this.codigo,
+                     "nombre":this.nombre,
+                     "stock":this.stock,
+                     "precio_venta":this.precio_venta
 
 
                }).then(function (response) {
                     // handle success
                     //console.log(response);
                     me.cerrarModal();
-                    me.listarCategoria(1,'','nombre');
+                    me.listarProducto(1,'','nombre');
 
                 }).catch(function (error) {
                     // handle error
@@ -371,27 +374,30 @@
 
            },
 
-            actualizarCategoria(){
+            actualizarProducto(){
 
-                if(this.validarCategoria()){
+                if(this.validarProducto()){
 
                    return;
                }
 
                let me=this;
 
-               axios.put('/categoria/actualizar',{
+               axios.put('/producto/actualizar',{
                  
-                 'nombre':this.nombre,
-                 'descripcion':this.descripcion,
-                 'id':this.categoria_id
+                    "idcategoria":this.idcategoria,
+                     "codigo":this.codigo,
+                     "nombre":this.nombre,
+                     "stock":this.stock,
+                     "precio_venta":this.precio_venta,
+                     "id":this.producto_id
 
 
                }).then(function (response) {
                     // handle success
                     //console.log(response);
                     me.cerrarModal();
-                    me.listarCategoria(1,'','nombre');
+                    me.listarProducto(1,'','nombre');
 
                 }).catch(function (error) {
                     // handle error
@@ -506,23 +512,33 @@
 
             },
 
-            validarCategoria(){
+            validarProducto(){
 
-                 this.errorCategoria=0;
-                 this.errorMostrarMsjCategoria=[];
-
-                 if(!this.nombre)  this.errorMostrarMsjCategoria.push("(*)El nombre de la categoria no puede estar vacio");
-
-                 if(this.errorMostrarMsjCategoria.length) this.errorCategoria=1;
+                 this.errorProducto=0;
+                 this.errorMostrarMsjProducto=[];
+                 
+                 if(this.idcategoria==0) this.errorMostrarMsjProducto.push("(*)Selecciona una categoria");
+                 if(!this.nombre) this.errorMostrarMsjProducto.push("(*)El nombre del producto no puede estar vacio");
+                 if(!this.precio_venta) this.errorMostrarMsjProducto.push("(*)El precio venta del producto debe ser un numero y no puede estar vacio");
+                 if(!this.stock) this.errorMostrarMsjProducto.push("(*)El stock del producto debe ser un numero y no puede estar vacio");
+                
+                
+                 if(this.errorMostrarMsjProducto.length) this.errorProducto=1;
              
-                 return this.errorCategoria;
+                 return this.errorProducto;
             },
 
            cerrarModal(){
 
-               this.modal=0;
-               this.tituloModal="";
-               this.nombre="";
+                this.modal=0;
+                this.tituloModal="";
+                this.idcategoria=0;
+                this.nombre_categoria="";
+                this.codigo="";
+                this.nombre="";
+                this.precio_venta=0;
+                this.stock=0;
+                this.errorProducto=0;
               
 
            },
@@ -541,12 +557,16 @@
 
                                 {
                                    
-                                   this.modal=1;
-                                   this.tituloModal="Registrar Producto";
-                                   this.nombre="";
-                                   this.descripcion="";
-                                   this.tipoAccion=1;
-                                   break;
+                                    this.modal=1;
+                                    this.tituloModal='Agregar Producto';
+                                    this.idcategoria=0;
+                                    this.nombre_categoria="";
+                                    this.codigo="";
+                                    this.nombre="";
+                                    this.precio_venta=0;
+                                    this.stock=0;
+                                    this.tipoAccion=1;
+                                    break;
                                 
                                 }
 
@@ -554,13 +574,16 @@
 
                                 {
                                     //console.log(data);
-                                    this.modal=1;
-                                    this.tituloModal="Editar Producto";
-                                    this.tipoAccion=2;
-                                    this.categoria_id=data["id"];
-                                    this.nombre=data["nombre"];
-                                    this.descripcion=data["descripcion"];
-                                    break;
+                                  this.modal=1;
+                                  this.tituloModal="Editar Producto";
+                                  this.tipoAccion=2;
+                                  this.producto_id=data["id"];
+                                  this.idcategoria=data["idcategoria"];
+                                  this.codigo=data["codigo"];
+                                  this.nombre=data["nombre"];
+                                  this.precio_venta=data["precio_venta"];
+                                  this.stock=data["stock"];
+                                  break;
                                 }
                         
                         }
