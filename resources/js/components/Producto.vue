@@ -75,13 +75,13 @@
                                     <td>
 
                                         <template v-if="producto.condicion">
-                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarCategoria(producto.id)">
+                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarProducto(producto.id)">
                                                 <i class="fa fa-lock fa-2x"></i> Desactivar
                                             </button>
                                         </template>
 
                                         <template v-else>
-                                            <button type="button" class="btn btn-success btn-sm" @click="activarCategoria(producto.id)">
+                                            <button type="button" class="btn btn-success btn-sm" @click="activarProducto(producto.id)">
                                                 <i class="fa fa-lock fa-2x"></i> Activar
                                             </button>
                                         </template>
@@ -163,7 +163,9 @@
                                     <label class="col-md-3 form-control-label" for="text-input">Codigo</label>
                                     <div class="col-md-9">
                                         <input type="text" v-model="codigo" class="form-control" placeholder="Codigo de barras">
-                                       
+                                          <barcode :value="codigo" :options="{format:'EAN-13'}">
+                                          Creando código de barras
+                                        </barcode>
                                     </div>
                                 </div>
                                 
@@ -212,7 +214,9 @@
 </template>
 
 <script>
-   
+import VueBarcode from 'vue-barcode';
+
+
     export default {
         data(){
 
@@ -248,7 +252,9 @@
             }
 
         },
-
+         components: {
+                'barcode': VueBarcode
+        },
         computed:{
 
             isActived: function(){
@@ -406,7 +412,7 @@
 
             },
 
-            desactivarCategoria(id){
+            desactivarProducto(id){
                             
                 const swalWithBootstrapButtons = Swal.mixin({
                 confirmButtonClass: 'btn btn-success',
@@ -415,7 +421,7 @@
                 })
 
                 swalWithBootstrapButtons({
-                title: 'Estas seguro de desactivar la categoria?',
+                title: 'Estas seguro de desactivar el producto?',
                 //type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: '<i class="fa fa-check fa-2x"></i> Aceptar',
@@ -426,7 +432,7 @@
 
                   let me=this;
 
-               axios.put('/categoria/desactivar',{
+               axios.put('/producto/desactivar',{
                  
                  'id':id
 
@@ -434,7 +440,7 @@
                }).then(function (response) {
                     // handle success
                     //console.log(response);
-                    me.listarCategoria(1,'','nombre');
+                    me.listarProducto(1,'','nombre');
 
                      swalWithBootstrapButtons(
                     'Desactivado!',
@@ -459,7 +465,7 @@
 
             },
 
-             activarCategoria(id){
+             activarProducto(id){
                             
                 const swalWithBootstrapButtons = Swal.mixin({
                 confirmButtonClass: 'btn btn-success',
@@ -468,7 +474,7 @@
                 })
 
                 swalWithBootstrapButtons({
-                title: 'Estas seguro de activar la categoria?',
+                title: 'Estas seguro de activar el producto?',
                 //type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: '<i class="fa fa-check fa-2x"></i> Aceptar',
@@ -479,7 +485,7 @@
 
                   let me=this;
 
-               axios.put('/categoria/activar',{
+               axios.put('/producto/activar',{
                  
                  'id':id
 
@@ -487,7 +493,7 @@
                }).then(function (response) {
                     // handle success
                     //console.log(response);
-                    me.listarCategoria(1,'','nombre');
+                    me.listarProducto(1,'','nombre');
 
                      swalWithBootstrapButtons(
                     'Activado!',
