@@ -13,7 +13,8 @@
     contenido 3
 </template>
 <template v-if="menu==4">
-    contenido 4
+  
+    <proveedor></proveedor>
 </template>
 <template v-if="menu==5">
     contenido 5
